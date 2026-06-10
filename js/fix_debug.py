@@ -1,4 +1,4 @@
-﻿let appData;
+let appData;
 let selectedCuisine = "川菜";
 let chinaMapReady = false;
 const charts = {};
@@ -55,13 +55,6 @@ function initDashboard() {
 }
 
 async function init() {
-  // Debug panel
-  var dp = document.createElement('div');
-  dp.id = 'dbgPanel';
-  dp.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#000;color:#0f0;padding:6px 10px;font:11px monospace;z-index:999999;max-height:120px;overflow:auto;border-bottom:2px solid #f00';
-  dp.innerHTML = '<div>[INIT] starting...</div>';
-  document.body.prepend(dp);
-  
   appData = await loadCuisineData();
   if (!appData.cuisines.includes(selectedCuisine)) selectedCuisine = appData.cuisines[0];
   initMetrics();
@@ -167,14 +160,7 @@ function initCharts() {
       const el = entry.target;
       const key = el.dataset.chartKey;
       if (!key || charts[key]) return;
-      try {
-        charts[key] = echarts.init(el, chartTheme);
-        var dp = document.getElementById('dbgPanel');
-        if (dp) dp.innerHTML += '<div>[CHART] init ' + key + ' OK</div>';
-      } catch(e) {
-        var dp = document.getElementById('dbgPanel');
-        if (dp) dp.innerHTML += '<div style="color:#f44">[CHART] init ' + key + ' FAIL: ' + e.message + '</div>';
-      }
+      charts[key] = echarts.init(el, chartTheme);
       observer.unobserve(el);
       if (key === "heat" || key === "bar3d" || key === "lines" || key === "sankey" || key === "word" || key === "taste" || key === "brand") {
         updateAll(selectedCuisine);
@@ -370,9 +356,6 @@ function loadImage(src) {
 }
 
 function updateHeatMap(cuisine) {
-  var dp = document.getElementById('dbgPanel');
-  if (!chinaMapReady && dp) dp.innerHTML += '<div style="color:#f44">[HEAT] chinaMapReady=false</div>';
-  if (!charts.heat && dp) dp.innerHTML += '<div style="color:#f44">[HEAT] charts.heat=null</div>';
   if (!chinaMapReady || !charts.heat) return;
   const rows = getProvinceRows(cuisine);
   const max = Math.max(...rows.map((row) => row.value), 1);
@@ -2341,6 +2324,18 @@ function updatePrice(cuisine) {
     }]
   }, true);
 }
+
+window.addEventListener('error', function(e) {
+  var d = document.getElementById('debugInfo');
+  if (!d) {
+    d = document.createElement('div');
+    d.id = 'debugInfo';
+    d.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#111;color:#f44;padding:10px;font-size:12px;z-index:99999;max-height:200px;overflow:auto;font-family:monospace';
+    document.body.appendChild(d);
+  }
+  d.innerHTML += '<div>' + (e.message || e).replace(/</g,'&lt;') + ' at line ' + e.lineno + '</div>';
+});
+
 
 init().then(() => {
   const loader = document.getElementById("pageLoader");
