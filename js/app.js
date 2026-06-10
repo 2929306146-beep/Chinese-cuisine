@@ -2334,3 +2334,4 @@ init().then(() => {
   if (loader) loader.classList.add("is-hidden");
   document.body.insertAdjacentHTML("afterbegin", `<div style="position:fixed;z-index:9999;left:20px;right:20px;top:20px;padding:18px;border:1px solid #f3c46b;background:#250d0b;color:#ffe4a3;border-radius:16px">页面数据加载失败：${error.message}。请用本地服务器打开页面，例如 python -m http.server。</div>`);
 });
+
