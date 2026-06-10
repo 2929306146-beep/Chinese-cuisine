@@ -1,4 +1,4 @@
-let appData;
+﻿let appData;
 let selectedCuisine = "川菜";
 let chinaMapReady = false;
 const charts = {};
@@ -348,7 +348,7 @@ async function exportCuisineCard(cuisine) {
 function loadImage(src) {
   return new Promise((resolve, reject) => {
     const img = new Image();
-    img.crossOrigin = "anonymous";
+    // img.crossOrigin removed for GitHub Pages compatibility
     img.onload = () => resolve(img);
     img.onerror = reject;
     img.src = src;
