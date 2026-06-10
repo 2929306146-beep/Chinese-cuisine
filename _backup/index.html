@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>中国菜系风味图鉴</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="page-loader" id="pageLoader">
+    <div class="loader-spinner"></div>
+    <div class="loader-text">华味图鉴</div>
+    <div class="loader-sub">数据加载中...</div>
+  </div>
+  <div class="site-shell">
+    <header class="hero" id="top">
+      <div class="hero__shade"></div>
+      <nav class="topbar">
+        <span class="brand-mark">华味图鉴</span>
+        <div class="nav-links">
+          <a href="#cuisines">菜系入口</a>
+          <a href="#maps">热力地图</a>
+          <a href="#spread">传播分析</a>
+          <a href="#network">菜系关联</a>
+          <a href="#province">各省分析</a>
+        </div>
+      </nav>
+      <div class="hero__content">
+        <p class="eyebrow">Chinese Cuisine Data Atlas</p>
+        <h1>中国菜系风味图鉴</h1>
+        <p class="hero__lead">以门店分布、起源传播、口味指数与食材词云，呈现中国菜系在全国版图上的风味流动。</p>
+        <div class="hero__actions">
+          <a class="gold-button" href="#cuisines">进入菜系</a>
+          <a class="ghost-button" href="#maps">查看热力图</a>
+        </div>
+      </div>
+      <div class="metric-strip" id="metricStrip"></div>
+    </header>
+
+    <main>
+      <section class="section cuisine-stage" id="cuisines">
+        <div class="section-heading">
+          <p class="eyebrow">Interactive Cuisine Entrance</p>
+          <h2>悬停定格，点击进入菜系详情</h2>
+          <p>菜系名称会循环放大并淡出，鼠标悬停时暂停动画，点击后联动所有图表。</p>
+        </div>
+        <div class="floating-cuisine-wrap">
+          <div class="floating-bg" id="floatingBg"></div>
+          <div class="floating-cuisines" id="floatingCuisines"></div>
+          <aside class="hover-card" id="hoverCard">
+            <span>当前菜系</span>
+            <strong id="hoverCuisineName">川菜</strong>
+            <p id="hoverCuisineMeta">悬停菜系文字查看起源地与覆盖情况。</p>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section detail-panel" id="detail">
+        <div class="detail-image" id="detailImage"></div>
+        <div class="detail-copy">
+          <p class="eyebrow">Cuisine Detail</p>
+          <h2 id="selectedCuisineTitle">川菜</h2>
+          <p id="selectedCuisineDesc">点击上方菜系文字后，这里会展示该菜系的起源地、门店覆盖和核心数据。</p>
+          <div class="detail-stats" id="detailStats"></div>
+          <button class="card-export-btn" id="exportCardBtn" title="生成本菜系精美名片图片">📇 生成菜系名片</button>
+        </div>
+      </section>
+
+      <section class="section chart-grid" id="maps">
+        <div class="chart-card chart-card--wide">
+          <div class="card-title-row">
+            <div>
+              <p class="eyebrow">China Heat Map</p>
+              <h2>中国地图热力图</h2>
+            </div>
+            <select id="cuisineSelect" aria-label="选择菜系"></select>
+          </div>
+          <div class="chart" id="heatMapChart"></div>
+        </div>
+        <div class="chart-card chart-card--wide">
+          <p class="eyebrow">Voxel Terrain</p>
+          <h2>3D 菜系体素地形图</h2>
+          <div class="chart" id="bar3DChart"></div>
+        </div>
+      </section>
+
+      <section class="section chart-grid" id="spread">
+        <div class="chart-card chart-card--large">
+          <p class="eyebrow">Cuisine Spread</p>
+          <h2>起源地到全国门店传播强度</h2>
+          <div class="chart" id="linesChart"></div>
+        </div>
+        <div class="chart-card">
+          <p class="eyebrow">Sankey Flow</p>
+          <h2>菜系传播桑基图</h2>
+          <div class="chart" id="sankeyChart"></div>
+        </div>
+      </section>
+
+      <section class="section chart-grid">
+        <div class="chart-card chart-card--large">
+          <p class="eyebrow">Taste & Ingredients</p>
+          <h2>口味食材词云</h2>
+          <div class="chart" id="wordCloudChart"></div>
+        </div>
+        <div class="chart-card">
+          <p class="eyebrow">Taste Index</p>
+          <h2>省份口味指数</h2>
+          <div class="chart" id="tasteChart"></div>
+        </div>
+        <div class="chart-card chart-card--wide">
+          <p class="eyebrow">Brand Ranking</p>
+          <h2>品牌与消费排行</h2>
+          <div class="chart" id="brandChart"></div>
+        </div>
+      </section>
+
+      <section class="section" id="network">
+        <div class="section-heading">
+          <p class="eyebrow">Cuisine Relationship Network</p>
+          <h2>菜系关联网络图</h2>
+          <p>基于口味关键词、常用食材的共享程度与地理邻近性计算菜系亲缘关系。节点越大表示门店越多，连线越粗表示关联越强。</p>
+        </div>
+        <div class="chart-card chart-card--wide">
+          <div class="chart" id="networkChart" style="height:600px"></div>
+        </div>
+      </section>
+
+      <section class="section province-section" id="province">
+        <div class="section-heading">
+          <p class="eyebrow">National Taste Index</p>
+          <h2>全国口味指数分布</h2>
+          <p>颜色越深表示该口味指数越高。支持鼠标滚轮缩放和拖拽浏览。</p>
+          <div class="taste-tabs">
+            <button class="taste-tab active" data-taste="hot">吃辣指数</button>
+            <button class="taste-tab" data-taste="sweet">吃甜指数</button>
+            <button class="taste-tab" data-taste="sour">吃酸指数</button>
+          </div>
+        </div>
+        <div class="taste-map-container">
+          <div class="taste-map-card">
+            <h3 id="tasteMapTitle">吃辣指数</h3>
+            <div class="taste-map" id="tasteMapChart"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section province-cuisine-section" id="provinceCuisine">
+        <div class="section-heading">
+          <p class="eyebrow">Province Cuisine Analysis</p>
+          <h2>各省菜系分析</h2>
+          <p>选择一个省份，查看该省的菜系分布情况。</p>
+          <select id="provinceSelect" aria-label="选择省份"></select>
+        </div>
+        <div class="province-cuisine-grid">
+          <div class="chart-card chart-card--large">
+            <h3 id="provinceChartTitle">北京市菜系分布</h3>
+            <div class="chart" id="provinceCuisineChart"></div>
+          </div>
+          <div class="province-info-card">
+            <h3>口味特征</h3>
+            <div class="province-taste-info" id="provinceTasteInfo"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section travel-section" id="travel">
+        <div class="section-heading">
+          <p class="eyebrow">Taste Quiz & Travel Recommendation</p>
+          <h2>口味画像 · 美食旅行推荐</h2>
+          <p>回答5道趣味题目，系统将绘出你的口味画像，并为你智能推荐最匹配的美食旅行路线。</p>
+        </div>
+        <div class="travel-layout">
+          <div class="travel-controls">
+            <div class="quiz-panel" id="quizPanel">
+              <div class="quiz-progress" id="quizProgress">
+                <span class="quiz-step active" data-step="1">1</span>
+                <span class="quiz-step" data-step="2">2</span>
+                <span class="quiz-step" data-step="3">3</span>
+                <span class="quiz-step" data-step="4">4</span>
+                <span class="quiz-step" data-step="5">5</span>
+              </div>
+              <div class="quiz-question" id="quizQuestion"></div>
+              <div class="quiz-options" id="quizOptions"></div>
+            </div>
+            <div class="quiz-result" id="quizResult" style="display:none">
+              <div class="result-header">你的口味画像</div>
+              <div class="result-bars">
+                <div class="result-bar-row">
+                  <span class="result-bar-label">🌶️ 吃辣</span>
+                  <div class="result-bar-track"><div class="result-bar-fill hot" id="resultHotBar"></div></div>
+                  <span class="result-bar-num" id="resultHotNum">5</span>
+                </div>
+                <div class="result-bar-row">
+                  <span class="result-bar-label">🍬 吃甜</span>
+                  <div class="result-bar-track"><div class="result-bar-fill sweet" id="resultSweetBar"></div></div>
+                  <span class="result-bar-num" id="resultSweetNum">5</span>
+                </div>
+                <div class="result-bar-row">
+                  <span class="result-bar-label">🍋 吃酸</span>
+                  <div class="result-bar-track"><div class="result-bar-fill sour" id="resultSourBar"></div></div>
+                  <span class="result-bar-num" id="resultSourNum">5</span>
+                </div>
+              </div>
+              <button class="retake-btn" id="retakeBtn">重新测试</button>
+            </div>
+            <div class="start-select-row">
+              <div class="start-select-group">
+                <label class="start-select-label">出发省份</label>
+                <select id="startProvinceSelect" class="start-province-select"></select>
+              </div>
+              <div class="start-select-group">
+                <label class="start-select-label">去几个地方</label>
+                <select id="stopCountSelect" class="start-province-select">
+                  <option value="3">3 个</option>
+                  <option value="4">4 个</option>
+                  <option value="5" selected>5 个</option>
+                  <option value="6">6 个</option>
+                  <option value="7">7 个</option>
+                  <option value="8">8 个</option>
+                  <option value="9">9 个</option>
+                  <option value="10">10 个</option>
+                </select>
+              </div>
+            </div>
+            <div class="travel-summary" id="travelSummary"></div>
+            <div class="travel-ranking" id="travelRanking">
+              <p class="ranking-placeholder">完成口味测试后将自动生成推荐路线</p>
+            </div>
+          </div>
+          <div class="travel-map-card">
+            <div class="chart" id="travelMapChart"></div>
+          </div>
+        </div>
+      </section>
+      <footer class="site-footer">
+        <div class="footer-content">
+          <p>数据来源：<a href="https://www.canyin88.com" target="_blank" rel="noopener">红餐网 (www.canyin88.com)</a> — 红餐大数据，收录 32,000+ 餐饮品牌，覆盖全国门店分布、品牌排名、人均消费及推荐菜品等维度。</p>
+          <p>本网站仅用于学术研究与课程展示，不作商业用途。</p>
+        </div>
+      </footer>
+    </main>
+
+    <div class="dashboard-bar" id="dashboardBar">
+      <span class="dashboard-item" id="dashCuisine">浏览菜系: <strong>川菜</strong></span>
+      <span class="dashboard-divider"></span>
+      <span class="dashboard-item" id="dashStores">门店数: <strong>--</strong></span>
+      <span class="dashboard-divider"></span>
+      <span class="dashboard-item" id="dashTop">最多省份: <strong>--</strong></span>
+      <span class="dashboard-divider"></span>
+      <span class="dashboard-item" id="dashTime">浏览时长: <strong>00:00</strong></span>
+      <span class="dashboard-divider"></span>
+      <a href="#top" class="dashboard-top-link">返回顶部 ↑</a>
+    </div>
+    <div class="city-modal-overlay" id="cityModalOverlay">
+      <div class="city-modal" id="cityModal">
+        <button class="city-modal-close" id="cityModalClose">&times;</button>
+        <div class="city-modal-hero" id="cityModalHero"></div>
+        <div class="city-modal-body">
+          <h2 class="city-modal-title" id="cityModalTitle"></h2>
+          <div class="city-modal-tags" id="cityModalTags"></div>
+          <div class="city-modal-section">
+            <h3>📍 城市概况</h3>
+            <p id="cityModalIntro"></p>
+          </div>
+          <div class="city-modal-section">
+            <h3>🍽️ 必吃美食</h3>
+            <div class="city-modal-foods" id="cityModalFoods"></div>
+          </div>
+          <div class="city-modal-section">
+            <h3>🗺️ 旅行建议</h3>
+            <div class="city-modal-tips" id="cityModalTips"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts-gl@2.0.9/dist/echarts-gl.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.1.0/dist/echarts-wordcloud.min.js"></script>
+  <script src="js/data-loader.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
